@@ -1,0 +1,67 @@
+[gd_scene load_steps=7 format=3 uid="uid://8fq2w76k73u"]
+
+[ext_resource type="Texture2D" uid="uid://dbcioauhilcgd" path="res://Battlers/World01_007_Pirate.png" id="1_g68b3"]
+[ext_resource type="Script" path="res://character.gd" id="1_q4nsv"]
+[ext_resource type="Texture2D" uid="uid://if4q2m3kt0db" path="res://cursor_finger.png" id="2_j7h50"]
+
+[sub_resource type="Animation" id="Animation_pkimx"]
+resource_name = "hurt"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(30, 30, 30, 1), Color(30, 30, 30, 1), Color(30, 30, 30, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_ite41"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qg266"]
+_data = {
+"RESET": SubResource("Animation_ite41"),
+"hurt": SubResource("Animation_pkimx")
+}
+
+[node name="Character" type="CharacterBody2D"]
+script = ExtResource("1_q4nsv")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("1_g68b3")
+
+[node name="focus" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-62, 2)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_j7h50")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+offset_left = -23.0
+offset_top = -59.0
+offset_right = 277.0
+offset_bottom = -19.0
+scale = Vector2(0.15, 0.15)
+value = 100.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_qg266")
+}

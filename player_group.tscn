@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://y3txj6qo3026"]
+
+[ext_resource type="Script" path="res://player_group.gd" id="1_xyluy"]
+[ext_resource type="PackedScene" uid="uid://8fq2w76k73u" path="res://character.tscn" id="2_3wyse"]
+[ext_resource type="Texture2D" uid="uid://7aqckwvatehl" path="res://Ready_00.png" id="3_a3of6"]
+[ext_resource type="Texture2D" uid="uid://bhovfpbbfa532" path="res://Ready_00 #32.png" id="4_rc206"]
+[ext_resource type="Texture2D" uid="uid://dpe2w6ai02ylc" path="res://Ready_00 #133.png" id="5_gy7mb"]
+[ext_resource type="Texture2D" uid="uid://bjg3nr3faiw56" path="res://Ready_00 #139.png" id="6_guvfo"]
+
+[node name="PlayerGroup" type="Node2D"]
+scale = Vector2(0.75, 0.75)
+script = ExtResource("1_xyluy")
+
+[node name="Character" parent="." instance=ExtResource("2_3wyse")]
+
+[node name="Sprite2D" parent="Character" index="0"]
+scale = Vector2(4, 4)
+texture = ExtResource("3_a3of6")
+
+[node name="Character2" parent="." instance=ExtResource("2_3wyse")]
+
+[node name="Sprite2D" parent="Character2" index="0"]
+scale = Vector2(4, 4)
+texture = ExtResource("4_rc206")
+
+[node name="Character3" parent="." instance=ExtResource("2_3wyse")]
+
+[node name="Sprite2D" parent="Character3" index="0"]
+scale = Vector2(4, 4)
+texture = ExtResource("5_gy7mb")
+
+[node name="Character4" parent="." instance=ExtResource("2_3wyse")]
+
+[node name="Sprite2D" parent="Character4" index="0"]
+scale = Vector2(4, 4)
+texture = ExtResource("6_guvfo")
+
+[editable path="Character"]
+[editable path="Character2"]
+[editable path="Character3"]
+[editable path="Character4"]
