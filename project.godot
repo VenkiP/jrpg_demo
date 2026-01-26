@@ -12,13 +12,17 @@ config_version=5
 
 config/name="turn_based_demo"
 run/main_scene="res://battle_scene.tscn"
-config/features=PackedStringArray("4.3", "Forward Plus")
+config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
 [display]
 
 window/size/viewport_width=960
 window/size/viewport_height=540
+
+[dotnet]
+
+project/assembly_name="turn_based_demo"
 
 [rendering]
 
