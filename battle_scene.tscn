@@ -1,5 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://cvh3ros77fxri"]
+[gd_scene load_steps=5 format=3 uid="uid://cvh3ros77fxri"]
 
+[ext_resource type="PackedScene" uid="uid://dlflj7dcg08rx" path="res://Cards/CardManager.tscn" id="1_5joda"]
 [ext_resource type="PackedScene" uid="uid://bvskiyo3m8bry" path="res://enemy_group.tscn" id="1_xbvlw"]
 [ext_resource type="Texture2D" uid="uid://3yandftbfs3g" path="res://BG_FF2_09.png" id="1_xihnp"]
 [ext_resource type="PackedScene" uid="uid://y3txj6qo3026" path="res://player_group.tscn" id="3_rsvbs"]
@@ -20,6 +21,10 @@ position = Vector2(121, 76)
 
 [node name="PlayerGroup" parent="." instance=ExtResource("3_rsvbs")]
 position = Vector2(735, 90)
+
+[node name="CardManager" parent="." instance=ExtResource("1_5joda")]
+position = Vector2(6.1035156e-05, 3.0517578e-05)
+scale = Vector2(0.99999994, 0.99999994)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
