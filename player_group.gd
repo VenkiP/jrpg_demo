@@ -9,12 +9,25 @@ func _ready():
 	for i in players.size():
 		players[i].position = Vector2(0, i*128)
 	players[0].focus()
+		
+func initialize_first_character():
+	players[0].focus()
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
 
 func _on_enemy_group_next_player() -> void:
+	if index < players.size() - 1:
+		index += 1
+		switch_focus(index, index - 1)
+	else:
+		index = 0
+		switch_focus(index, players.size() - 1)
+
+func _on_end_turn_next_player() -> void:
+	#We do need to eventually add priority here
 	if index < players.size() - 1:
 		index += 1
 		switch_focus(index, index - 1)

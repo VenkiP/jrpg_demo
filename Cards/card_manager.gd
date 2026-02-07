@@ -7,8 +7,14 @@ extends Node2D
 const FOOL = preload("res://Cards/Assets/Tarot Cats/0. The Fool.png")
 const MAGICIAN = preload("res://Cards/Assets/Tarot Cats/1. The Magician.png")
 const CARD_SCENE = preload("res://Cards/Card.tscn")
+var CARD_ASSETS = []
 
 var CARDS: = []
+var current_character
+
+signal end_turn
+
+@onready var card_turn: VBoxContainer = $"../CardTurn/choice"
 
 func set_card_visibility(isVisible: bool) -> void:
 	for i in CARDS.size():
@@ -16,22 +22,26 @@ func set_card_visibility(isVisible: bool) -> void:
 		curr_child.visible = isVisible
 	pass
 
-func set_cards(card_count: int) -> void:
+func process_card_usage(old: String):
+	print(old)
+	#Maybe the node can follow a naming convention of (card owner, card name, instance number?)
+	#This may not be the best way because there can, will, and should
+	#be duplicate cards
+	var used_card = get_node(old)
+	remove_child(used_card)
+	var used_card_index = CARDS.find(used_card)
+	CARDS.remove_at(used_card_index)
+	pass
 
+func set_cards(card_count: int, character: String) -> void:
+	current_character = character
 	for i in card_count:
 		var card_instance = CARD_SCENE.instantiate()
+		card_instance.use_card.connect(process_card_usage)
 		card_instance.set_name("card" + str(i))
 		add_child(card_instance)
 		CARDS.append(card_instance)
 
-	var dir := DirAccess.open("res://Cards/Assets/Tarot Cats")
-	if dir == null: printerr("Could not open folder"); return
-	dir.list_dir_begin()
-	var card_assets := []
-	for file: String in dir.get_files():
-		if (file.ends_with(".png")):
-			card_assets.append(load(dir.get_current_dir() + "/" + file))
-	
 	var bottom_margin = 0
 	var current_viewport_height = get_viewport_rect().size.y
 	var current_viewport_width = get_viewport_rect().size.x
@@ -46,21 +56,47 @@ func set_cards(card_count: int) -> void:
 		var card_collision_width = curr_child.get_child(1).shape.size.x
 
 		print(card_collision_height)
-		var setting_asset = card_assets[i]
+		var setting_asset = CARD_ASSETS[i]
 		curr_child.set_image(setting_asset)
 		#Change this from hard coding to proportional to the screen width
 		var card_x_pos = current_viewport_width - ((inter_card_margin + card_collision_width) * (i + 1)) - side_margin
 		var new_position = Vector2(card_x_pos, current_viewport_height - bottom_margin - card_collision_height)
 		curr_child.position = new_position
+		
+	set_card_visibility(false)
 
+func set_max_number_of_cards_playable() -> void:
+	pass
+
+func load_deck() -> void:
+	pass
 
 # Called when the node enters the scene tree for the first time.
 
 func _ready() -> void:
-	set_cards(6)
-	set_card_visibility(true)
+	var dir := DirAccess.open("res://Cards/Assets/Tarot Cats")
+	if dir == null: printerr("Could not open folder"); return
+	dir.list_dir_begin()
+	for file: String in dir.get_files():
+		if (file.ends_with(".png")):
+			CARD_ASSETS.append(load(dir.get_current_dir() + "/" + file))
+	
 	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+func _on_attack_pressed() -> void:
+	set_card_visibility(true)
+	pass # Replace with function body.
+
+
+func _on_end_turn_pressed() -> void:
+	#End turn has to notify that the turn has ended sot that the player manage changes focus of the player
+	print("End Turn")
+	for card in CARDS:
+		remove_child(card)
+	CARDS.clear()
+	card_turn.hide()
+	end_turn.emit(current_character)
