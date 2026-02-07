@@ -32,6 +32,8 @@ func load_character(character: String):
 	if (character == 'Brad'):
 		#Only load fool cards
 		print('Load' + character)
-		cardManager.set_cards(2, character)
+		var cards: Array[String] = ["12TheHangedMan", "13Death"]
+		cardManager.set_cards(cards, character)
 	else:
-		cardManager.set_cards(6, character)
+		var cards: Array[String] = ["2ThePriestess", "6TheLovers"]
+		cardManager.set_cards(cards, character)

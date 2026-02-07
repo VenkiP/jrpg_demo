@@ -4,10 +4,8 @@ extends Node2D
 # Called when the node enters the scene tree for the first time.
 #This is a bit too hard coded, it only needs to load the cards that are accessible in the game
 #So the world is going to need to keep track of a unique set of card image paths
-const FOOL = preload("res://Cards/Assets/Tarot Cats/0. The Fool.png")
-const MAGICIAN = preload("res://Cards/Assets/Tarot Cats/1. The Magician.png")
 const CARD_SCENE = preload("res://Cards/Card.tscn")
-var CARD_ASSETS = []
+var CARD_ASSETS = {}
 
 var CARDS: = []
 var current_character
@@ -23,22 +21,23 @@ func set_card_visibility(isVisible: bool) -> void:
 	pass
 
 func process_card_usage(old: String):
-	print(old)
 	#Maybe the node can follow a naming convention of (card owner, card name, instance number?)
 	#This may not be the best way because there can, will, and should
 	#be duplicate cards
 	var used_card = get_node(old)
+	#We need to revisit card management because removing a child is different than freeing queue. The latter is what actually frees the memory
 	remove_child(used_card)
 	var used_card_index = CARDS.find(used_card)
 	CARDS.remove_at(used_card_index)
 	pass
 
-func set_cards(card_count: int, character: String) -> void:
+func set_cards(cards: Array[String], character: String) -> void:
 	current_character = character
-	for i in card_count:
+	for card in cards:
 		var card_instance = CARD_SCENE.instantiate()
 		card_instance.use_card.connect(process_card_usage)
-		card_instance.set_name("card" + str(i))
+#		This does not properly handle duplicates so we need to do
+		card_instance.set_name(card)
 		add_child(card_instance)
 		CARDS.append(card_instance)
 
@@ -55,8 +54,8 @@ func set_cards(card_count: int, character: String) -> void:
 		var card_collision_height = curr_child.get_child(1).shape.size.y
 		var card_collision_width = curr_child.get_child(1).shape.size.x
 
-		print(card_collision_height)
-		var setting_asset = CARD_ASSETS[i]
+		#Notice how it does it based on the raw node name, this is not good and we have to fix this with card duplications
+		var setting_asset = CARD_ASSETS[curr_child.get_name()]
 		curr_child.set_image(setting_asset)
 		#Change this from hard coding to proportional to the screen width
 		var card_x_pos = current_viewport_width - ((inter_card_margin + card_collision_width) * (i + 1)) - side_margin
@@ -71,6 +70,10 @@ func set_max_number_of_cards_playable() -> void:
 func load_deck() -> void:
 	pass
 
+func normalize_asset_name(name: String) -> String:
+	var removed_periods = name.remove_chars(".")
+	var removed_spaces = removed_periods.remove_chars(" ")
+	return removed_spaces
 # Called when the node enters the scene tree for the first time.
 
 func _ready() -> void:
@@ -79,8 +82,9 @@ func _ready() -> void:
 	dir.list_dir_begin()
 	for file: String in dir.get_files():
 		if (file.ends_with(".png")):
-			CARD_ASSETS.append(load(dir.get_current_dir() + "/" + file))
-	
+			var cardName = file.substr(0, file.length() - 4)
+			var normalizedCardName = normalize_asset_name(cardName)
+			CARD_ASSETS[normalizedCardName] = load(dir.get_current_dir() + "/" + file)
 	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -94,7 +98,6 @@ func _on_attack_pressed() -> void:
 
 func _on_end_turn_pressed() -> void:
 	#End turn has to notify that the turn has ended sot that the player manage changes focus of the player
-	print("End Turn")
 	for card in CARDS:
 		remove_child(card)
 	CARDS.clear()
