@@ -1,11 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://cvh3ros77fxri"]
+[gd_scene load_steps=6 format=3 uid="uid://cvh3ros77fxri"]
 
+[ext_resource type="PackedScene" uid="uid://dlflj7dcg08rx" path="res://Cards/CardManager.tscn" id="1_5joda"]
+[ext_resource type="Script" uid="uid://ccldm0fbmec5s" path="res://battle_scene.gd" id="1_gf131"]
 [ext_resource type="PackedScene" uid="uid://bvskiyo3m8bry" path="res://enemy_group.tscn" id="1_xbvlw"]
 [ext_resource type="Texture2D" uid="uid://3yandftbfs3g" path="res://BG_FF2_09.png" id="1_xihnp"]
 [ext_resource type="PackedScene" uid="uid://y3txj6qo3026" path="res://player_group.tscn" id="3_rsvbs"]
 
 [node name="BattleScene" type="Node2D"]
 modulate = Color(0.633757, 0.633757, 0.633757, 1)
+script = ExtResource("1_gf131")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 offset_left = -42.0
@@ -20,6 +23,10 @@ position = Vector2(121, 76)
 
 [node name="PlayerGroup" parent="." instance=ExtResource("3_rsvbs")]
 position = Vector2(735, 90)
+
+[node name="CardManager" parent="." instance=ExtResource("1_5joda")]
+position = Vector2(6.1035156e-05, 3.0517578e-05)
+scale = Vector2(0.99999994, 0.99999994)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -45,5 +52,22 @@ layout_mode = 2
 disabled = true
 text = "Run"
 
+[node name="CardTurn" type="CanvasLayer" parent="."]
+
+[node name="choice" type="VBoxContainer" parent="CardTurn"]
+visible = false
+offset_left = 859.0
+offset_top = 402.0
+offset_right = 933.0
+offset_bottom = 442.0
+
+[node name="EndTurn" type="Button" parent="CardTurn/choice"]
+layout_mode = 2
+text = "EndTurn
+"
+
 [connection signal="next_player" from="EnemyGroup" to="PlayerGroup" method="_on_enemy_group_next_player"]
 [connection signal="pressed" from="CanvasLayer/choice/Attack" to="EnemyGroup" method="_on_attack_pressed"]
+[connection signal="pressed" from="CanvasLayer/choice/Attack" to="CardManager" method="_on_attack_pressed"]
+[connection signal="pressed" from="CardTurn/choice/EndTurn" to="EnemyGroup" method="_on_end_turn_pressed"]
+[connection signal="pressed" from="CardTurn/choice/EndTurn" to="CardManager" method="_on_end_turn_pressed"]

@@ -7,6 +7,7 @@ var index: int = 0
 
 signal next_player
 @onready var choice: VBoxContainer = $"../CanvasLayer/choice"
+@onready var card_turn: VBoxContainer = $"../CardTurn/choice"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -62,4 +63,8 @@ func _start_choosing():
 
 func _on_attack_pressed():
 	choice.hide()
+	card_turn.show()
 	_start_choosing()
+
+func _on_end_turn_pressed() -> void:
+	choice.show()
